@@ -1,1 +1,1 @@
-# rtfm_water_tracker_backend
+# GoIT RTFM group project: water tracker app development. This repository is backend part.
