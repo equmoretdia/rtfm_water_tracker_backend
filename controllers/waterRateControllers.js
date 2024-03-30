@@ -5,7 +5,7 @@ import userModels from "../models/userModels";
 const updateWaterRate = async (req, res) => { 
     const {id} = req.user;
 
-    const result = await User.findByIdAndUpdate(id, req.body, {new: true});
+    const result = await userModels.findByIdAndUpdate(id, req.body, {new: true});
     if (!result){
         throw HttpError(400)
     };
@@ -14,5 +14,5 @@ const updateWaterRate = async (req, res) => {
 }
 
 export const controllers = {
-    updatewaterRate: ctrlWrapper(updateWaterRate)
+    updateWaterRate: ctrlWrapper(updateWaterRate)
 }

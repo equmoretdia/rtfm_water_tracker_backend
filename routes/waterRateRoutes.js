@@ -5,6 +5,6 @@ import { controllers } from "../controllers/waterRateControllers";
 
 const waterRouter = express.Router();
 
-waterRouter.patch('/waterRate', authenticate, validateBody(waterRateSchema), controllers.updatewaterRate);
+waterRouter.patch('/waterRate', authenticate, validateBody(waterRateSchema), controllers.updateWaterRate);
 
 export default waterRouter;
