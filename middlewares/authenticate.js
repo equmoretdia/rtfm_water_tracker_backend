@@ -1,41 +1,25 @@
 import jwt from "jsonwebtoken";
-import User from "../models/userModels.js";
+import { User } from "../models/usersModel.js";
 
-export function tokenAuth(req, res, next) {
-  const authHeader = req.headers.authorization;
+import { HttpError } from "../helpers/HttpError.js";
 
-  if (typeof authHeader === "undefined") {
-    return res.status(401).send({ message: "Not authorized" });
+export const authenticate = async (req, res, next) => {
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization.split(" ", 2);
+  console.log(bearer);
+  console.log(token);
+  if (bearer !== "Bearer") {
+    next(HttpError(401));
   }
-
-  const [Bearer, token] = authHeader.split(" ", 2);
-  if (Bearer !== "Bearer") {
-    return res.status(401).send({ message: "Not authorized" });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, async (err, decode) => {
-    if (err) {
-      if (err.name === "TokenExpiredError") {
-        return res.status(401).send({ message: "Not authorized" });
-      }
-      return res.status(401).send({ message: "Not authorized" });
+  try {
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(id);
+    if (!user || !user.token || user.token !== token) {
+      next(HttpError(401));
     }
-
-    const user = await User.findById(decode.id);
-    if (user === null) {
-      return res.status(401).send({ message: "Not authorized" });
-    }
-    if (user.token !== token) {
-      return res.status(401).send({ message: "Not authorized" });
-    }
-    req.user = {
-      _id: user.id,
-      email: user.email,
-      token: user.token,
-    };
-
+    req.user = user;
     next();
-  });
-}
-
-export default tokenAuth;
+  } catch {
+    next(HttpError(401));
+  }
+};

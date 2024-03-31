@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-// добавила настройки для монгусу
+
 mongoose.set("strictQuery", true);
 
 import { app } from "./app.js";
