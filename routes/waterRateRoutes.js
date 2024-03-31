@@ -1,10 +1,11 @@
 import express from "express";
-import { validateBody } from "../middlewares/validateBody";
-import { waterRateSchema } from "../models/userModels";
-import { controllers } from "../controllers/waterRateControllers";
+import { validateBody } from "../middlewares/validateBody.js";
+import { waterRateSchema } from "../models/userModels.js";
+import { controllers } from "../controllers/waterRateControllers.js";
+import tokenAuth from "../middlewares/authenticate.js";
 
 const waterRateRouter = express.Router();
 
-waterRateRouter.patch('/water-rate', authenticate, validateBody(waterRateSchema), controllers.updateWaterRate);
+waterRateRouter.patch('/water-rate', tokenAuth, validateBody(waterRateSchema), controllers.updateWaterRate);
 
-export default waterRouter;
+export default waterRateRouter;

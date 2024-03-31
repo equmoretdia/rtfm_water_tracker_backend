@@ -1,8 +1,8 @@
 import Water, {
   addWaterSchema,
   updateWaterSchema,
-} from "../models/waterModels";
-import HttpError from "../helpers/HttpError.js";
+} from "../models/waterModels.js";
+import {HttpError} from "../helpers/HttpError.js";
 
 export const addWater = async (req, res, next) => {
   try {

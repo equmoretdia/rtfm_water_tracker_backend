@@ -1,11 +1,11 @@
-import { HttpError } from "../helpers/HttpError";
-import { ctrlWrapper } from "../helpers/ctrlWrapper";
-import userModels from "../models/userModels";
+import { HttpError } from "../helpers/HttpError.js";
+import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import User from "../models/userModels.js";
 
 const updateWaterRate = async (req, res) => { 
     const {id} = req.user;
 
-    const result = await userModels.findByIdAndUpdate(id, req.body, {new: true});
+    const result = await User.findByIdAndUpdate(id, req.body, {new: true});
     if (!result){
         throw HttpError(400)
     };
