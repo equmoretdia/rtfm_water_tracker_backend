@@ -8,6 +8,7 @@ dotenv.config();
 // import routes here:
 // e.g. import { contactsRouter } from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRoutes.js";
+import waterRateRouter from "./routes/waterRateRoutes.js";
 import waterRouter from "./routes/waterRoutes.js";
 
 export const app = express();
@@ -19,6 +20,7 @@ app.use(express.json());
 // mount route to path here:
 // e.g. app.use("/api/contacts", contactsRouter);
 app.use("/api/user", authRouter);
+app.use('/api/user', waterRateRouter);
 app.use("/api/water", waterRouter);
 
 app.use((_, res) => {

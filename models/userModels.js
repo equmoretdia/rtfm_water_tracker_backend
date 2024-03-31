@@ -1,3 +1,4 @@
+import Joi from "joi";
 import mongoose from "mongoose";
 
 const emailRegexp =
@@ -25,6 +26,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  waterRate:{
+    type: String,
+    default: 2,
+    max: 15,
+  }
 }, { versionKey: false });
+
+
+export const waterRateSchema = Joi.object({
+  waterRate: Joi.string().max(15).required(),
+});
 
 export default mongoose.model("User", userSchema)
