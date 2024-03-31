@@ -3,7 +3,7 @@ import User from "../models/userModels.js";
 
 
 
-export function tokenAuth(req, res, next) {
+ function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (typeof authHeader === "undefined") {
@@ -34,10 +34,16 @@ export function tokenAuth(req, res, next) {
       _id: user.id,
       email: user.email,
       token: user.token,
+      
     };
 
     next();
   });
 }
 
-export default tokenAuth;
+export default authenticate;
+
+     
+
+
+

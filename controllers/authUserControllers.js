@@ -5,25 +5,25 @@ import User from "../models/userModels.js";
 
 
 export const registerUser = async (req, res, next) => {
-    const { password, email } = req.body; 
-    const normalizeEmail = email.toLowerCase();
-    try {
-        const user = await User.findOne({ email: normalizeEmail });
-        if (user !== null) {
-            return res.status(409).send({ massage: "Email in use" })
-        }
-        const passwordHash = await bcrypt.hash(password, 10)
-        const data = await User.create({
-          password: passwordHash,
-          email: normalizeEmail,
-        });
-        // console.log(data);
-        res.status(201).send({massage: "Registration successfully"})
+  const { password, email } = req.body;
+  const normalizedEmail = email.toLowerCase();
 
-    } catch (error) {
-        next(error)
- }
-}
+  try {
+    const user = await User.findOne({ email: normalizedEmail });
+    if (user !== null) {
+      return res.status(409).send({ message: "Email in use" });
+    }
+    const passwordHash = await bcrypt.hash(password, 10);
+    const data = await User.create({
+      password: passwordHash,
+      email: normalizedEmail,
+    });
+
+    res.status(201).send({ message: "Registration successful" });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const loginUser = async (req, res, next) => {
     const { password, email } = req.body;
@@ -60,6 +60,7 @@ if (isMatch === false) {
 export const logoutUser = async(req, res, next) => {
   try {
     await User.findByIdAndUpdate(req.user.id, { token: null });
+    
     res.status(204).end();
 
   } catch (error) {
