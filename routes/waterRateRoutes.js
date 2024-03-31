@@ -3,8 +3,8 @@ import { validateBody } from "../middlewares/validateBody";
 import { waterRateSchema } from "../models/userModels";
 import { controllers } from "../controllers/waterRateControllers";
 
-const waterRouter = express.Router();
+const waterRateRouter = express.Router();
 
-waterRouter.patch('/waterRate', authenticate, validateBody(waterRateSchema), controllers.updateWaterRate);
+waterRateRouter.patch('/water-rate', authenticate, validateBody(waterRateSchema), controllers.updateWaterRate);
 
 export default waterRouter;
