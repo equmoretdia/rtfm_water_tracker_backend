@@ -15,7 +15,7 @@ const waterSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "user",
+    ref: "User",
   },
 });
 
@@ -24,11 +24,9 @@ export default model("Water", waterSchema);
 export const addWaterSchema = Joi.object({
   amount: Joi.number().required().min(1).max(5000),
   time: Joi.date().required().iso(),
-  owner: Joi.string().required(),
 });
 
 export const updateWaterSchema = Joi.object({
   amount: Joi.number().min(1).max(5000),
   time: Joi.date().required().iso(),
-  owner: Joi.string().required(),
 });

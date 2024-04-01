@@ -4,13 +4,14 @@ import {
   updateWater,
   deleteWater,
 } from "../controllers/waterControllers.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const waterRouter = express.Router();
 
-waterRouter.post("/add", addWater);
+waterRouter.post("/add", authenticate, addWater);
 
-waterRouter.param("/update", updateWater);
+waterRouter.patch("/update/:id", authenticate, updateWater);
 
-waterRouter.delete("/delete", deleteWater);
+waterRouter.delete("/delete/:id", authenticate, deleteWater);
 
 export default waterRouter;

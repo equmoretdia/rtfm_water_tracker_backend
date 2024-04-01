@@ -2,20 +2,21 @@ import Water, {
   addWaterSchema,
   updateWaterSchema,
 } from "../models/waterModels.js";
-import {HttpError} from "../helpers/HttpError.js";
+import { HttpError } from "../helpers/HttpError.js";
 
 export const addWater = async (req, res, next) => {
   try {
     const newDose = {
       amount: req.body.amount,
       time: req.body.time,
-      owner: req.user.owner,
+      owner: req.user._id,
     };
     const { error } = addWaterSchema.validate(newDose);
 
     if (typeof error !== "undefined") {
       next(HttpError(400, error.message));
     }
+
     const result = await Water.create(newDose);
 
     res.status(201).send(result);
@@ -58,14 +59,14 @@ export const updateWater = async (req, res, next) => {
 export const deleteWater = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const contact = await Water.findOneAndDelete({ _id: id });
+    const waterDose = await Water.findOneAndDelete({ _id: id });
 
-    if (contact === null) {
+    if (waterDose === null) {
       next(HttpError(404));
       return;
     }
 
-    res.status(200).send(contact);
+    res.status(200).send(waterDose);
   } catch (error) {
     next(error).json({ message: "Server error" });
   }

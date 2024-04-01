@@ -31,7 +31,7 @@ const userSchema = new Schema(
     waterRate: {
       type: Number,
       default: 2,
-      max: [15, "Maximum amount of your daily normal is 15L"]
+      max: [15, "Maximum amount of your daily normal is 15L"],
     },
   },
   { versionKey: false }
