@@ -7,7 +7,7 @@ dotenv.config();
 
 import { authRouter } from "./routes/authRouter.js";
 import waterRateRouter from "./routes/waterRateRoutes.js";
-import waterRouter from "./routes/waterRoutes.js";
+import { waterRouter } from "./routes/waterRouter.js";
 
 export const app = express();
 
