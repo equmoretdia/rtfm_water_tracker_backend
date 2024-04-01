@@ -47,7 +47,6 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   const { _id } = req.user;
-  console.log(req.user);
   await User.findByIdAndUpdate(_id, { token: null });
   res.status(204).end();
 };

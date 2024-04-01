@@ -6,8 +6,6 @@ import { HttpError } from "../helpers/HttpError.js";
 export const authenticate = async (req, res, next) => {
   const { authorization = "" } = req.headers;
   const [bearer, token] = authorization.split(" ", 2);
-  console.log(bearer);
-  console.log(token);
   if (bearer !== "Bearer") {
     next(HttpError(401));
   }
