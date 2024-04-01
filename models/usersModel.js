@@ -31,13 +31,15 @@ const userSchema = new Schema(
     waterRate: {
       type: Number,
       default: 2,
-      max: [15, "Maximum amount of your daily normal is 15L"]
+      max: [15, "Maximum amount of your daily normal is 15L"],
     },
   },
   { versionKey: false }
 );
 
 userSchema.post("save", handleMongooseError);
+
+export const User = model("user", userSchema);
 
 export const authSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
@@ -47,5 +49,3 @@ export const authSchema = Joi.object({
 export const waterRateSchema = Joi.object({
   waterRate: Joi.number().max(15).required(),
 });
-
-export const User = model("user", userSchema);
