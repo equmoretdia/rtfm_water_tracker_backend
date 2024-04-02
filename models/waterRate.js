@@ -4,8 +4,8 @@ import { handleMongooseError } from "../helpers/handleMongooseError.js";
 const waterRateSchema = new Schema({
     waterRate:  {
         type: Number,
-        default: 2,
-        max: [15, "Maximum amount of your daily normal is 15L"],
+        default: 2000,
+        max: [15000, "Maximum amount of your daily normal is 15L"],
     },
     date: {
         type: Date, 

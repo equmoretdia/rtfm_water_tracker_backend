@@ -38,11 +38,11 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    waterRate: {
-      type: Number,
-      default: 2,
-      max: [15, "Maximum amount of your daily normal is 15L"],
-    },
+    // waterRate: {
+    //   type: Number,
+    //   default: 2,
+    //   max: [15, "Maximum amount of your daily normal is 15L"],
+    // },
   },
   { versionKey: false }
 );
@@ -57,7 +57,7 @@ export const authSchema = Joi.object({
 });
 
 export const waterRateSchema = Joi.object({
-  waterRate: Joi.number().max(15).required(),
+  waterRate: Joi.number().max(15000).required(),
 });
 
 export const userInfoUpdatedSchema = Joi.object({

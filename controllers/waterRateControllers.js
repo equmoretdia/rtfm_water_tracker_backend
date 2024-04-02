@@ -1,21 +1,23 @@
 import { HttpError } from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
-import { User } from "../models/usersModel.js";
+// import { User } from "../models/usersModel.js";
 import { WaterRate } from "../models/waterRate.js";
 
-const gcreateWaterRateArray = async (req, res) => {
-  const { _id: owner } = req.user;
+// const createWaterRateArray = async (req, res) => {
+// const { _id: owner } = req.user;
 
-  const waterRateArray = await WaterRate.create({...req.body, owner})
+//   const waterRateArray = await WaterRate.create({...req.body, owner})
 
-  res.json(waterRateArray)
+//   res.json(waterRateArray)
 
-};
+// };
 
 const updateWaterRate = async (req, res) => {
-  const { id } = req.user;
-  
-  const result = await User.findByIdAndUpdate(id, req.body, { new: true });
+
+  const { _id: owner } = req.user;
+  console.log('id', owner)
+  const result = await WaterRate.findOneAndUpdate({owner}, req.body, { new: true });
+  console.log('result', result)
   if (!result) {
     throw HttpError(400);
   }
@@ -24,6 +26,6 @@ const updateWaterRate = async (req, res) => {
 };
 
 export const controllers = {
-  createWaterRateArray: ctrlWrapper(createWaterRateArray),
+  // createWaterRateArray: ctrlWrapper(createWaterRateArray),
   updateWaterRate: ctrlWrapper(updateWaterRate),
 };

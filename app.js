@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { authRouter } from "./routes/authRouter.js";
-import waterRateRouter from "./routes/waterRateRoutes.js";
+import { waterRateRouter } from "./routes/waterRateRouter.js";
 import { waterRouter } from "./routes/waterRouter.js";
 import userSettingsRoutes from "./routes/userSettingsRoutes.js";
 
