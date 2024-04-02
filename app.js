@@ -8,7 +8,7 @@ dotenv.config();
 import { authRouter } from "./routes/authRouter.js";
 import waterRateRouter from "./routes/waterRateRoutes.js";
 import { waterRouter } from "./routes/waterRouter.js";
-import userSettingsRoutes from "./routes/userSettingsRoutes.js";
+import { userSettingsRouter } from "./routes/userSettingsRouter.js";
 
 export const app = express();
 
@@ -20,7 +20,7 @@ app.use(express.static("public"));
 app.use("/api/auth", authRouter);
 app.use("/api/user", waterRateRouter);
 app.use("/api/water", waterRouter);
-app.use("/api/user-settings", userSettingsRoutes);
+app.use("/api/user-settings", userSettingsRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });

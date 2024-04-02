@@ -12,6 +12,7 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
+      default: null,
     },
     password: {
       type: String,
@@ -62,7 +63,7 @@ export const waterRateSchema = Joi.object({
 
 export const userInfoUpdatedSchema = Joi.object({
   name: Joi.string().max(32),
-  email: Joi.string().pattern(emailRegexp).required(),
+  email: Joi.string().pattern(emailRegexp),
   outdatedPassword: Joi.string().min(8).max(64),
   newPassword: Joi.string().min(8).max(64),
   gender: Joi.string().valid(...gender),
