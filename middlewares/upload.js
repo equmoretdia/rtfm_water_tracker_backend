@@ -1,19 +1,38 @@
-import multer from 'multer';
-import * as path from 'node:path';
-import * as crypto from 'node:crypto';
+import { v2 as cloudinary } from "cloudinary";
+import multer from "multer";
+import dotenv from "dotenv";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
-const storage = multer.diskStorage ({
-    destination(req, file, callback) {
-        callback(null, path.join(process.cwd(), 'tmp'));
-    }, 
-    filename(req, file, callback) {
-        const extname = path.extname(file.originalname);
-        const basename = path.basename(file.originalname, extname);
-        const suffix = crypto.randomUUID(); 
-        callback(null, `${basename}-${suffix}${extname}`);
-    }
+dotenv.config();
+
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env;
+
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
 });
 
-const upload = multer({ storage });
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    // Determine the folder based on file properties or request data
+    let folder;
+    if (file.fieldname === "avatar") {
+      folder = "avatars";
+    } else if (file.fieldname === "documents") {
+      folder = "documents";
+    } else {
+      folder = "misc";
+    }
+    return {
+      folder: folder,
+      allowed_formats: ["jpg", "png"], // Adjust the allowed formats as needed
+      public_id: file.originalname, // Use original filename as the public ID
+      transformation: [{ width: 250, height: 250 }],
+    };
+  },
+});
 
-export default upload;
+export const upload = multer({ storage });

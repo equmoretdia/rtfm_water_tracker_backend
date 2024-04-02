@@ -1,17 +1,14 @@
 import bcrypt from "bcryptjs";
-import fs from "fs/promises";
-import { User } from "./../models/usersModel.js";
-import { ctrlWrapper } from "./../helpers/ctrlWrapper.js";
-import { HttpError } from "./../helpers/HttpError.js";
-import cloudinary from "./../helpers/cloudinary.js";
-import { deleteFromCloudinary } from "./../helpers/cloudinary.js";
+import { User } from "../models/usersModel.js";
+import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import { HttpError } from "../helpers/HttpError.js";
 
-const getCurrentUser = async (req, res) => {
-  const { name = "", email, gender, avatarURL } = req.user;
+const get = async (req, res) => {
+  const { name, email, gender, avatarURL } = req.user;
   res.json({ name, email, gender, avatarURL });
 };
 
-const updateUserInfo = async (req, res) => {
+const updateInfo = async (req, res) => {
   const { outdatedPassword, newPassword, newEmail } = req.body;
   const { _id, currentEmail } = req.user;
 
@@ -68,47 +65,19 @@ const updateUserInfo = async (req, res) => {
 };
 
 const avatar = async (req, res) => {
-  const { _id } = req.user;
+  const { path } = req.file;
+  const { _id, avatarURL } = req.user;
+
   if (!req.file) {
     throw HttpError(400, "File not found");
   }
-  const { path } = req.file;
-  const { url: avatarURL } = await cloudinary.uploader.upload(req.file.path, {
-    folder: "avatars",
-    width: 250,
-    height: 250,
-    crop: "pad",
-  });
-  await fs.unlink(path);
-  await User.findByIdAndUpdate(_id, { avatarURL });
 
+  await User.findByIdAndUpdate(_id, { avatarURL: path });
   res.status(200).json({
-    avatarURL,
+    avatarURL: path,
   });
 };
 
-const deleteUserAndData = async (req, res) => {
-  const { _id } = req.user;
-
-  const user = await User.findById(_id);
-  if (!user) {
-    throw new HttpError(404, "User not found");
-  }
-
-  if (user.avatarURL) {
-    await deleteFromCloudinary(user.avatarURL);
-  }
-
-  await User.findByIdAndDelete(_id);
-
-  res.status(200).json({
-    message: "User and all related data have been successfully deleted.",
-  });
-};
-
-export default {
-  avatar: ctrlWrapper(avatar),
-  getCurrentUser: ctrlWrapper(getCurrentUser),
-  updateUserInfo: ctrlWrapper(updateUserInfo),
-  deleteUserAndData: ctrlWrapper(deleteUserAndData),
-};
+export const updateUserAvatar = ctrlWrapper(avatar);
+export const getCurrentUser = ctrlWrapper(get);
+export const updateUserInfo = ctrlWrapper(updateInfo);
