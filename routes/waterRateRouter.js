@@ -6,13 +6,6 @@ import { authenticate } from "../middlewares/authenticate.js";
 
 export const waterRateRouter = express.Router();
 
-// waterRateRouter.post(
-//   "/water-rate", 
-//   authenticate,
-//   validateBody(waterRateSchema), 
-//   controllers.createWaterRateArray
-// )
-
 waterRateRouter.patch(
   "/water-rate",
   authenticate,
