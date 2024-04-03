@@ -1,20 +1,33 @@
-import { HttpError } from "../helpers/HttpError.js";
+import { parseDate, getDateRangeQuery } from "../helpers/dateUtils.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
-import { WaterRate } from "../models/waterRate.js";
+import { WaterRate } from "../models/waterRateModel.js";
 
-const updateWaterRate = async (req, res) => {
-
+const update = async (req, res) => {
   const { _id: owner } = req.user;
+  const { waterRate, date } = req.body;
 
-  const result = await WaterRate.findOneAndUpdate({owner}, req.body, { new: true });
+  const requestDate = date ? parseDate(date) : new Date();
+  const dateRangeQuery = getDateRangeQuery(requestDate);
 
-  if (!result) {
-    throw HttpError(400);
+  let result = await WaterRate.findOne({
+    owner,
+    date: dateRangeQuery,
+  });
+
+  if (result) {
+    await WaterRate.findOneAndUpdate(
+      { owner, date: dateRangeQuery },
+      { waterRate, date },
+      {
+        new: true,
+      }
+    );
+  } else {
+    await WaterRate.create({ ...req.body, owner });
   }
+  const allResults = await WaterRate.find({ owner });
 
-  res.json(result);
+  res.json(allResults);
 };
 
-export const controllers = {
-  updateWaterRate: ctrlWrapper(updateWaterRate),
-};
+export const updateWaterRate = ctrlWrapper(update);
