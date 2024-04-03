@@ -15,10 +15,9 @@ export const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public"));
 
 app.use("/api/auth", authRouter);
-app.use("/api/user", waterRateRouter);
+app.use("/api/water-rate", waterRateRouter);
 app.use("/api/water", waterRouter);
 app.use("/api/user-settings", userSettingsRouter);
 
