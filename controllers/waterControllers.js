@@ -10,7 +10,7 @@ const add = async (req, res) => {
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const updatedDose = await Water.findOneAndUpdate(id, req.body, {
+  const updatedDose = await Water.findByIdAndUpdate(id, req.body, {
     new: true,
   });
 
@@ -23,7 +23,7 @@ const update = async (req, res) => {
 
 const del = async (req, res) => {
   const { id } = req.params;
-  const removedDose = await Water.findOneAndDelete(id);
+  const removedDose = await Water.findByIdAndDelete(id);
   if (!removedDose) {
     throw HttpError(404);
   }
