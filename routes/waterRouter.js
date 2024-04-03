@@ -7,6 +7,7 @@ import {
 
 import { authenticate } from "../middlewares/authenticate.js";
 import { isValidId } from "../middlewares/isValidId.js";
+import { isBodyEmpty } from "../middlewares/isBodyEmpty.js";
 import { validateBody } from "../middlewares/validateBody.js";
 import { addWaterSchema, updateWaterSchema } from "../models/waterModel.js";
 
@@ -18,6 +19,7 @@ waterRouter.patch(
   "/:id",
   authenticate,
   isValidId,
+  isBodyEmpty,
   validateBody(updateWaterSchema),
   updateWater
 );
