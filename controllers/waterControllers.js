@@ -9,9 +9,6 @@ const add = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  if (Object.keys(req.body).length === 0) {
-    throw HttpError(400, "Body must have at least one field");
-  }
   const { id } = req.params;
   const updatedDose = await Water.findOneAndUpdate(id, req.body, {
     new: true,
