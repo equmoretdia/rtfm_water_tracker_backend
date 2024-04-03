@@ -1,4 +1,4 @@
-// import { HttpError } from "../helpers/HttpError.js";
+import { parseDate, getDateRangeQuery } from "../helpers/dateUtils.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 import { WaterRate } from "../models/waterRateModel.js";
 
@@ -6,23 +6,8 @@ const update = async (req, res) => {
   const { _id: owner } = req.user;
   const { waterRate, date } = req.body;
 
-  const requestDate = new Date(date);
-  const requestDateUTC = new Date(
-    Date.UTC(
-      requestDate.getUTCFullYear(),
-      requestDate.getUTCMonth(),
-      requestDate.getUTCDate()
-    )
-  );
-
-  const startOfDayUTC = new Date(requestDateUTC);
-  const endOfDayUTC = new Date(requestDateUTC);
-  endOfDayUTC.setUTCDate(endOfDayUTC.getUTCDate() + 1);
-
-  const dateRangeQuery = {
-    $gte: startOfDayUTC,
-    $lt: endOfDayUTC,
-  };
+  const requestDate = date ? parseDate(date) : new Date();
+  const dateRangeQuery = getDateRangeQuery(requestDate);
 
   let result = await WaterRate.findOne({
     owner,
