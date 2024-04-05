@@ -1,6 +1,13 @@
 import { Water } from "../models/waterModel.js";
+import { WaterRate } from "../models/waterRateModel.js";
 import { HttpError } from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
+import {
+  parseDate,
+  getStartOfMonth,
+  getLastDayOfMonth,
+  getMonthName,
+} from "../helpers/dateUtils.js";
 
 const add = async (req, res) => {
   const { _id: owner } = req.user;
@@ -30,6 +37,67 @@ const del = async (req, res) => {
   res.json(removedDose);
 };
 
+const getMonth = async (req, res) => {
+  const { _id: owner } = req.user;
+  const { date } = req.body;
+
+  const requestDate = parseDate(date);
+  const requestMonth = requestDate.getMonth() + 1;
+  const requestYear = requestDate.getFullYear();
+
+  const waterRatesMonth = await WaterRate.find({
+    owner,
+    date: {
+      $gte: getStartOfMonth(requestYear, requestMonth),
+      $lt: getStartOfMonth(requestYear, requestMonth + 1),
+    },
+  });
+
+  const waterMonth = await Water.find({
+    owner,
+    date: {
+      $gte: getStartOfMonth(requestYear, requestMonth),
+      $lt: getStartOfMonth(requestYear, requestMonth + 1),
+    },
+  });
+
+  const waterInfoForMonth = [];
+
+  for (let i = 1; i <= getLastDayOfMonth(requestYear, requestMonth); i++) {
+    const day = i;
+
+    const waterRateForDay = waterRatesMonth.find(
+      (record) => new Date(record.date).getDate() === day
+    );
+
+    const waterIntakeForDay = waterMonth.filter(
+      (record) => new Date(record.date).getDate() === day
+    );
+
+    const totalWaterIntakeForDay = waterIntakeForDay.reduce(
+      (total, record) => total + record.amount,
+      0
+    );
+
+    let percentage = 0;
+    if (waterRateForDay) {
+      percentage = (totalWaterIntakeForDay / waterRateForDay.waterRate) * 100;
+    }
+
+    const waterInfo = {
+      date: `${day}, ${getMonthName(requestMonth)}`,
+      waterRate: waterRateForDay ? waterRateForDay.waterRate : 0,
+      percentage: percentage.toFixed(2),
+      totalIntake: waterIntakeForDay.length,
+    };
+
+    waterInfoForMonth.push(waterInfo);
+  }
+
+  res.json({ waterInfoForMonth });
+};
+
 export const addWater = ctrlWrapper(add);
 export const updateWater = ctrlWrapper(update);
 export const deleteWater = ctrlWrapper(del);
+export const getWaterMonth = ctrlWrapper(getMonth);

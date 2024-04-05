@@ -36,3 +36,7 @@ export const updateWaterSchema = Joi.object({
   amount: Joi.number().min(1).max(5000),
   date: Joi.date().iso(),
 });
+
+export const getWaterMonthSchema = Joi.object({
+  date: Joi.date().required().iso(),
+});
