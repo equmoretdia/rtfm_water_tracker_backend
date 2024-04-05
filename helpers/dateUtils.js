@@ -25,3 +25,29 @@ export const getDateRangeQuery = (date) => {
     $lt: endOfDayUTC,
   };
 };
+
+export const getStartOfMonth = (year, month) => {
+  return new Date(year, month - 1, 1);
+};
+
+export const getLastDayOfMonth = (year, month) => {
+  return new Date(year, month, 0).getDate();
+};
+
+export const getMonthName = (month) => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  return months[month - 1];
+};
