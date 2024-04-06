@@ -42,7 +42,10 @@ const login = async (req, res) => {
     { expiresIn: "12h" }
   );
   await User.findByIdAndUpdate(user._id, { token });
-  res.json({ token });
+  res.json({
+    token,
+    user: { email: user.email, avatarURL: user.avatarURL },
+  });
 };
 
 const logout = async (req, res) => {
