@@ -1,0 +1,198 @@
+{
+  "openapi": "3.0.1",
+  
+  "info": {
+    "version": "1.0.0",
+   " title": "Swagger  ",
+    "description": "Api documentation for water tracker ",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json","multipart/form-data"],
+  "servers": [{ "url": "http://localhost:8080" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+     " name": "User",
+      "description": "Authorization endpoints"
+    },
+    {
+    " name": "WaterRate",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Water",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Today",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Month",
+      "description": "Authorization endpoints"
+    }
+  ],
+
+  
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+       " parameters": [],
+        
+        "requestBody": {
+          "description": "Description of parameters : email - must to be string, password min 8 max 64, password -string, encrypted user password",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful",
+            "content": {
+            "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationRequest"
+                }
+              }
+            }
+          },
+         "409": {
+            "description": "Email in use",
+          "content": {}
+          }
+        }
+      }
+      
+    },
+     "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+       " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Description of parameters : email - must to be string, password min 8 max 64, password -string, encrypted user password, token -string",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+            "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+         "401": {
+            "description": "Email or password is wrong",
+           " content": {}
+          }
+        }
+      }
+      
+    },
+     "/api/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+       " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "logout object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationResponse"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {
+            
+            }
+          }
+        }
+      }
+      
+    }
+    
+    
+  },
+
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password min 8 max 64",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "items": {
+          
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "userId": {
+              "type": "number",
+              "description": "User's id",
+              "example": "32143232436545474"
+            }
+          }
+        },
+        "example": [
+          { "email": "2@gmail.com", "userId": "2" }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
+  
