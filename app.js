@@ -30,6 +30,7 @@ app.use("/api/water", waterRouter);
 app.use("/api/user-settings", userSettingsRouter);
 
 
+
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
 });

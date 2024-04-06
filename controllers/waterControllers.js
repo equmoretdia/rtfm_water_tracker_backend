@@ -7,8 +7,8 @@ import {
   getStartOfMonth,
   getLastDayOfMonth,
   getMonthName,
+  getDateRangeQuery,
 } from "../helpers/dateUtils.js";
-
 const add = async (req, res) => {
   const { _id: owner } = req.user;
   const newDose = await Water.create({ ...req.body, owner });
@@ -96,8 +96,30 @@ const getMonth = async (req, res) => {
 
   res.json({ waterInfoForMonth });
 };
+const getToday = async (req, res) => {
+  const { _id: owner } = req.user;
+  const requestDate = new Date();
+  const dateRangeQuery = getDateRangeQuery(requestDate);
+
+  const { waterRate } = await WaterRate.findOne({
+    owner,
+    date: dateRangeQuery,
+  });
+  const waterAmount = await Water.find({
+    owner,
+    date: dateRangeQuery,
+  });
+  const sumAmount = waterAmount.reduce((total, arr) => total + arr.amount, 0);
+  const listAmount = waterAmount.map((arr) => arr.amount);
+  const waterPercent = Math.round((sumAmount  / waterRate) * 100);
+  const result = { waterPercent, listAmount };
+
+  res.json(result);
+};
+
 
 export const addWater = ctrlWrapper(add);
 export const updateWater = ctrlWrapper(update);
 export const deleteWater = ctrlWrapper(del);
 export const getWaterMonth = ctrlWrapper(getMonth);
+export const getWaterToday = ctrlWrapper(getToday);
