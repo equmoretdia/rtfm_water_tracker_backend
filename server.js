@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-
 mongoose.set("strictQuery", true);
+
+
 
 import { app } from "./app.js";
 
@@ -18,3 +19,6 @@ mongoose
     console.log(error.message);
     process.exit(1);
   });
+
+
+ 
