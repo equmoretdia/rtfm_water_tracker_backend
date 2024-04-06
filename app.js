@@ -12,7 +12,6 @@ import { authRouter } from "./routes/authRouter.js";
 import { waterRateRouter } from "./routes/waterRateRouter.js";
 import { waterRouter } from "./routes/waterRouter.js";
 import { userSettingsRouter } from "./routes/userSettingsRouter.js"
-import { waterStatRouter } from "./routes/waterStatRouter.js";
 
 export const app = express();
 
@@ -29,7 +28,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/water-rate", waterRateRouter);
 app.use("/api/water", waterRouter);
 app.use("/api/user-settings", userSettingsRouter);
-app.use("/api/water-stat", waterStatRouter);
+
 
 
 app.use((_, res) => {

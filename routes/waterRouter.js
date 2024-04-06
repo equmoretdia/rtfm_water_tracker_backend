@@ -4,6 +4,7 @@ import {
   updateWater,
   deleteWater,
   getWaterMonth,
+  getWaterToday,
 } from "../controllers/waterControllers.js";
 
 import { authenticate } from "../middlewares/authenticate.js";
@@ -36,4 +37,10 @@ waterRouter.get(
   authenticate,
   validateBody(getWaterMonthSchema),
   getWaterMonth
+);
+
+waterRouter.get(
+  "/today",
+  authenticate,
+  getWaterToday
 );
