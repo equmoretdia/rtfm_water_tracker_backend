@@ -18,7 +18,7 @@ const register = async (req, res) => {
     password: passwordHash,
     email: normalizeEmail,
   });
-  res.status(201).json({ massage: "Registration successful" });
+  res.status(201).json({ message: "Registration successful" });
 };
 
 const login = async (req, res) => {
