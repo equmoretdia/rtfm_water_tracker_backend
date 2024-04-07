@@ -27,11 +27,19 @@ export const getDateRangeQuery = (date) => {
 };
 
 export const getStartOfMonth = (year, month) => {
-  return new Date(year, month - 1, 1);
+  return new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
 };
 
 export const getLastDayOfMonth = (year, month) => {
-  return new Date(year, month, 0).getDate();
+  return new Date(Date.UTC(year, month, 0, 23, 59, 59)).getUTCDate();
+};
+
+export const getEndOfMonth = (year, month) => {
+  const nextMonth = month === 12 ? 1 : month + 1;
+  const nextYear = nextMonth === 1 ? year + 1 : year;
+  const lastDayOfMonth = new Date(Date.UTC(nextYear, nextMonth - 1, 0));
+  lastDayOfMonth.setUTCHours(23, 59, 59, 999);
+  return lastDayOfMonth;
 };
 
 export const getMonthName = (month) => {

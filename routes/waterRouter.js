@@ -32,15 +32,11 @@ waterRouter.patch(
 
 waterRouter.delete("/:id", authenticate, isValidId, deleteWater);
 
+waterRouter.get("/today", authenticate, getWaterToday);
+
 waterRouter.get(
   "/month",
   authenticate,
   validateBody(getWaterMonthSchema),
   getWaterMonth
-);
-
-waterRouter.get(
-  "/today",
-  authenticate,
-  getWaterToday
 );

@@ -5,6 +5,7 @@ import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 import {
   parseDate,
   getStartOfMonth,
+  getEndOfMonth,
   getLastDayOfMonth,
   getMonthName,
   getDateRangeQuery,
@@ -37,6 +38,57 @@ const del = async (req, res) => {
   res.json(removedDose);
 };
 
+const getToday = async (req, res) => {
+  const { _id: owner } = req.user;
+  const requestDate = new Date();
+  const dateRangeQuery = getDateRangeQuery(requestDate);
+  const requestMonth = requestDate.getMonth() + 1;
+  const requestYear = requestDate.getFullYear();
+
+  const waterAmount = await Water.find({
+    owner,
+    date: dateRangeQuery,
+  });
+
+  const waterRateChanges = await WaterRate.find({
+    owner,
+    date: { $lte: requestDate },
+  }).sort({ date: 1 });
+
+  let currentWaterRate = 2000;
+
+  for (let j = waterRateChanges.length - 1; j >= 0; j--) {
+    const changeDate = new Date(waterRateChanges[j].date);
+    const changeYear = changeDate.getUTCFullYear();
+    const changeMonth = changeDate.getUTCMonth() + 1;
+    const changeDay = changeDate.getUTCDate();
+
+    if (
+      changeYear < requestYear ||
+      (changeYear === requestYear && changeMonth < requestMonth) ||
+      (changeYear === requestYear &&
+        changeMonth === requestMonth &&
+        changeDay <= requestDate)
+    ) {
+      currentWaterRate = waterRateChanges[j].waterRate;
+      break;
+    }
+  }
+
+  const sumAmount = waterAmount.reduce((total, arr) => total + arr.amount, 0);
+
+  const waterRecords = waterAmount.map((record) => ({
+    consumedWater: record.amount,
+    date: record.date,
+  }));
+
+  const waterPercent = Math.round((sumAmount / currentWaterRate) * 100);
+
+  const result = { waterPercent, waterRecords };
+
+  res.json(result);
+};
+
 const getMonth = async (req, res) => {
   const { _id: owner } = req.user;
   const { date } = req.body;
@@ -45,19 +97,19 @@ const getMonth = async (req, res) => {
   const requestMonth = requestDate.getMonth() + 1;
   const requestYear = requestDate.getFullYear();
 
-  const waterRatesMonth = await WaterRate.find({
+  const startDate = getStartOfMonth(requestYear, requestMonth);
+  const endDate = getEndOfMonth(requestYear, requestMonth);
+
+  const waterRateChanges = await WaterRate.find({
     owner,
-    date: {
-      $gte: getStartOfMonth(requestYear, requestMonth),
-      $lt: getStartOfMonth(requestYear, requestMonth + 1),
-    },
-  });
+    date: { $lte: endDate },
+  }).sort({ date: 1 });
 
   const waterMonth = await Water.find({
     owner,
     date: {
-      $gte: getStartOfMonth(requestYear, requestMonth),
-      $lt: getStartOfMonth(requestYear, requestMonth + 1),
+      $gte: startDate,
+      $lte: endDate,
     },
   });
 
@@ -66,29 +118,51 @@ const getMonth = async (req, res) => {
   for (let i = 1; i <= getLastDayOfMonth(requestYear, requestMonth); i++) {
     const day = i;
 
-    const waterRateForDay = waterRatesMonth.find(
-      (record) => new Date(record.date).getDate() === day
-    );
+    let currentWaterRate = null;
 
-    const waterIntakeForDay = waterMonth.filter(
-      (record) => new Date(record.date).getDate() === day
-    );
+    for (let j = waterRateChanges.length - 1; j >= 0; j--) {
+      const changeDate = new Date(waterRateChanges[j].date);
+      const changeYear = changeDate.getUTCFullYear();
+      const changeMonth = changeDate.getUTCMonth() + 1;
+      const changeDay = changeDate.getUTCDate();
+
+      if (
+        changeYear < requestYear ||
+        (changeYear === requestYear && changeMonth < requestMonth) ||
+        (changeYear === requestYear &&
+          changeMonth === requestMonth &&
+          changeDay <= day)
+      ) {
+        currentWaterRate = waterRateChanges[j].waterRate;
+        break;
+      }
+    }
+
+    if (currentWaterRate === null) {
+      currentWaterRate = 2000;
+    }
+
+    const waterIntakeForDay = waterMonth.filter((record) => {
+      const recordDate = new Date(record.date);
+      return recordDate.getUTCDate() === day;
+    });
 
     const totalWaterIntakeForDay = waterIntakeForDay.reduce(
       (total, record) => total + record.amount,
       0
     );
 
-    let percentage = 0;
-    if (waterRateForDay) {
-      percentage = (totalWaterIntakeForDay / waterRateForDay.waterRate) * 100;
-    }
+    const totalIntakeForDay = waterIntakeForDay.length;
+
+    const percentage = currentWaterRate
+      ? Math.round((totalWaterIntakeForDay / currentWaterRate) * 100)
+      : 0;
 
     const waterInfo = {
       date: `${day}, ${getMonthName(requestMonth)}`,
-      waterRate: waterRateForDay ? waterRateForDay.waterRate : 0,
-      percentage: percentage.toFixed(2),
-      totalIntake: waterIntakeForDay.length,
+      waterRate: currentWaterRate,
+      percentage: percentage,
+      totalIntake: totalIntakeForDay,
     };
 
     waterInfoForMonth.push(waterInfo);
@@ -96,30 +170,9 @@ const getMonth = async (req, res) => {
 
   res.json({ waterInfoForMonth });
 };
-const getToday = async (req, res) => {
-  const { _id: owner } = req.user;
-  const requestDate = new Date();
-  const dateRangeQuery = getDateRangeQuery(requestDate);
-
-  const { waterRate } = await WaterRate.findOne({
-    owner,
-    date: dateRangeQuery,
-  });
-  const waterAmount = await Water.find({
-    owner,
-    date: dateRangeQuery,
-  });
-  const sumAmount = waterAmount.reduce((total, arr) => total + arr.amount, 0);
-  const listAmount = waterAmount.map((arr) => arr.amount);
-  const waterPercent = Math.round((sumAmount  / waterRate) * 100);
-  const result = { waterPercent, listAmount };
-
-  res.json(result);
-};
-
 
 export const addWater = ctrlWrapper(add);
 export const updateWater = ctrlWrapper(update);
 export const deleteWater = ctrlWrapper(del);
-export const getWaterMonth = ctrlWrapper(getMonth);
 export const getWaterToday = ctrlWrapper(getToday);
+export const getWaterMonth = ctrlWrapper(getMonth);
