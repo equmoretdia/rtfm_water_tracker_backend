@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
-  
+
   "info": {
     "version": "1.0.0",
-   " title": "Swagger  ",
+    " title": "Swagger  ",
     "description": "Api documentation for water tracker ",
     "license": {
       "name": "MIT",
@@ -11,43 +11,42 @@
     }
   },
   "consumes": ["application/json", "multipart/form-data"],
-  "produces": ["application/json","multipart/form-data"],
+  "produces": ["application/json", "multipart/form-data"],
   "servers": [{ "url": "http://localhost:8080" }],
   "tags": [
     {
       "name": "Auth",
-      "description": "Authorization endpoints"
+      "description": "Authentication  endpoints"
     },
     {
-     " name": "User",
-      "description": "Authorization endpoints"
+      " name": "User",
+      "description": "User endpoints, information about user "
     },
     {
-    " name": "WaterRate",
-      "description": "Authorization endpoints"
+      " name": "WaterRate",
+      "description": "WaterRate endpoints, calculation of the daily norm "
     },
     {
       "name": "Water",
-      "description": "Authorization endpoints"
+      "description": "Water endpoints, saving information about of consumed water "
     },
     {
       "name": "Today",
-      "description": "Authorization endpoints"
+      "description": "Today  endpoints, current information for the day of used water"
     },
     {
       "name": "Month",
-      "description": "Authorization endpoints"
+      "description": "Month endpoints,information for the month of used water "
     }
   ],
 
-  
   "paths": {
     "/api/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
-       " parameters": [],
-        
+        " parameters": [],
+
         "requestBody": {
           "description": "Description of parameters : email - must to be string, password min 8 max 64, password -string, encrypted user password",
           "required": true,
@@ -63,26 +62,25 @@
           "201": {
             "description": "Registration successful",
             "content": {
-            "application/json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RegistrationRequest"
                 }
               }
             }
           },
-         "409": {
+          "409": {
             "description": "Email in use",
-          "content": {}
+            "content": {}
           }
         }
       }
-      
     },
-     "/api/auth/login": {
+    "/api/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
-       " parameters": [],
+        " parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Description of parameters : email - must to be string, password min 8 max 64, password -string, encrypted user password, token -string",
@@ -99,26 +97,25 @@
           "201": {
             "description": "Successful operation",
             "content": {
-            "application/json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RegistrationResponse"
                 }
               }
             }
           },
-         "401": {
+          "401": {
             "description": "Email or password is wrong",
-           " content": {}
+            " content": {}
           }
         }
       }
-      
     },
-     "/api/auth/logout": {
+    "/api/auth/logout": {
       "post": {
         "tags": ["Auth"],
         "summary": "User logout",
-       " parameters": [],
+        " parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "logout object",
@@ -134,16 +131,335 @@
         "responses": {
           "204": {
             "description": "Successful operation",
-            "content": {
-            
-            }
+            "content": {}
           }
         }
       }
-      
+    },
+
+    "/api/user-settings/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "User information",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email is already in use",
+            "content": {}
+          },
+          "400": {
+            "description": "File not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/user-settings/edit": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update information",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email is already in use",
+            "content": {}
+          },
+          "400": {
+            "description": "File not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/user-settings/avatar": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Update avatar",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email in use",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/water/": {
+      "post": {
+        "tags": ["Water"],
+        "summary": "Add water",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email in use",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/water/:id": {
+      "patch": {
+        "tags": ["Water"],
+        "summary": "Update water",
+        " parameters": [],
+
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/water/:id": {
+      "delete": {
+        "tags": ["Water"],
+        "summary": "Delete information about water",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/water/today": {
+      "get": {
+        "tags": ["Today"],
+        "summary": "Information about daily water requirement",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/water/month": {
+      "get": {
+        "tags": ["Month"],
+        "summary": "Information about monthly water norm",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/water-rate/": {
+      "patch": {
+        "tags": ["WaterRate"],
+        "summary": "Calculation of daily rate water ",
+        " parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {}
+          }
+        }
+      }
     }
-    
-    
   },
 
   "components": {
@@ -167,7 +483,6 @@
       "RegistrationResponse": {
         "type": "object",
         "items": {
-          
           "properties": {
             "email": {
               "type": "string",
@@ -181,10 +496,39 @@
             }
           }
         },
-        "example": [
-          { "email": "2@gmail.com", "userId": "2" }
-        ]
+        "example": [{ "email": "2@gmail.com", "userId": "2" }]
+      },
+
+      "WaterSchema": {
+        "type": "object",
+        "items": {
+          "amount": {
+            "type": "number"
+          },
+          "date": {
+            "type": "Date"
+          },
+          "owner": {}
+        }
+      },
+
+      "WaterResponse":{
+        "type": "object",
+      "amount":{
+        "type":"Date"
+      },
+      "date":{
+        "type": "number"
       }
+      },
+
+       "GetWater":{
+        "type":"object",
+        "date":{
+          "type":"Date"
+
+        }
+       }
     },
     "securitySchemes": {
       "Bearer": {
@@ -195,4 +539,3 @@
     }
   }
 }
-  
