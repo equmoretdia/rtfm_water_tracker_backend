@@ -41,13 +41,12 @@ const del = async (req, res) => {
 const getToday = async (req, res) => {
   const { _id: owner } = req.user;
   const requestDate = new Date();
-  const dateRangeQuery = getDateRangeQuery(requestDate);
   const requestMonth = requestDate.getMonth() + 1;
   const requestYear = requestDate.getFullYear();
 
   const waterAmount = await Water.find({
     owner,
-    date: dateRangeQuery,
+    date: getDateRangeQuery(requestDate),
   });
 
   const waterRateChanges = await WaterRate.find({
@@ -76,13 +75,12 @@ const getToday = async (req, res) => {
   }
 
   const sumAmount = waterAmount.reduce((total, arr) => total + arr.amount, 0);
+  const waterPercent = Math.round((sumAmount / currentWaterRate) * 100);
 
   const waterRecords = waterAmount.map((record) => ({
     consumedWater: record.amount,
     date: record.date,
   }));
-
-  const waterPercent = Math.round((sumAmount / currentWaterRate) * 100);
 
   const result = { waterPercent, waterRecords };
 
@@ -114,11 +112,10 @@ const getMonth = async (req, res) => {
   });
 
   const waterInfoForMonth = [];
+  let currentWaterRate = 2000;
 
   for (let i = 1; i <= getLastDayOfMonth(requestYear, requestMonth); i++) {
     const day = i;
-
-    let currentWaterRate = null;
 
     for (let j = waterRateChanges.length - 1; j >= 0; j--) {
       const changeDate = new Date(waterRateChanges[j].date);
@@ -138,10 +135,6 @@ const getMonth = async (req, res) => {
       }
     }
 
-    if (currentWaterRate === null) {
-      currentWaterRate = 2000;
-    }
-
     const waterIntakeForDay = waterMonth.filter((record) => {
       const recordDate = new Date(record.date);
       return recordDate.getUTCDate() === day;
@@ -152,8 +145,6 @@ const getMonth = async (req, res) => {
       0
     );
 
-    const totalIntakeForDay = waterIntakeForDay.length;
-
     const percentage = currentWaterRate
       ? Math.round((totalWaterIntakeForDay / currentWaterRate) * 100)
       : 0;
@@ -162,7 +153,7 @@ const getMonth = async (req, res) => {
       date: `${day}, ${getMonthName(requestMonth)}`,
       waterRate: currentWaterRate,
       percentage: percentage,
-      totalIntake: totalIntakeForDay,
+      totalIntake: waterIntakeForDay.length,
     };
 
     waterInfoForMonth.push(waterInfo);
