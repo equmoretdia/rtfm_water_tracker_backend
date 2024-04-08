@@ -8,11 +8,16 @@ const get = async (req, res) => {
   res.json({ name, email, gender, avatarURL });
 };
 
-const updateInfo = async (req, res) => {
+const updateSettings = async (req, res) => {
   const { outdatedPassword, newPassword, newEmail } = req.body;
   const { _id, currentEmail } = req.user;
 
   let hashedNewPassword;
+  let avatarURL;
+
+  if (req.file) {
+    avatarURL = req.file.path;
+  }
 
   if (outdatedPassword && newPassword) {
     const user = await User.findById(_id);
@@ -55,29 +60,17 @@ const updateInfo = async (req, res) => {
   if (hashedNewPassword) {
     updatedUserData.password = hashedNewPassword;
   }
+  if (avatarURL) {
+    updatedUserData.avatarURL = avatarURL;
+  }
 
   const updatedUser = await User.findByIdAndUpdate(_id, updatedUserData, {
     new: true,
   });
 
   const { name = "", gender, email } = updatedUser;
-  res.status(200).json({ email, name, gender });
+  res.status(200).json({ email, name, gender, avatarURL });
 };
 
-const avatar = async (req, res) => {
-  const { path } = req.file;
-  const { _id, avatarURL } = req.user;
-
-  if (!req.file) {
-    throw HttpError(400, "File not found");
-  }
-
-  await User.findByIdAndUpdate(_id, { avatarURL: path });
-  res.status(200).json({
-    avatarURL: path,
-  });
-};
-
-export const updateUserAvatar = ctrlWrapper(avatar);
 export const getCurrentUser = ctrlWrapper(get);
-export const updateUserInfo = ctrlWrapper(updateInfo);
+export const updateUserSettings = ctrlWrapper(updateSettings);
