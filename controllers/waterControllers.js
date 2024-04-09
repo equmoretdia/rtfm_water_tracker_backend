@@ -10,6 +10,7 @@ import {
   getMonthName,
   getDateRangeQuery,
 } from "../helpers/dateUtils.js";
+
 const add = async (req, res) => {
   const { _id: owner } = req.user;
   const newDose = await Water.create({ ...req.body, owner });
@@ -36,6 +37,7 @@ const del = async (req, res) => {
   if (!removedDose) {
     throw HttpError(404);
   }
+
   res.json(removedDose);
 };
 
@@ -90,7 +92,8 @@ const getToday = async (req, res) => {
 
 const getMonth = async (req, res) => {
   const { _id: owner } = req.user;
-  const { date } = req.body;
+  // const { date } = req.body;
+  const { date } = req.query;
 
   const requestDate = parseDate(date);
   const requestMonth = requestDate.getMonth() + 1;

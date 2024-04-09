@@ -5,13 +5,12 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json" assert { type: "json" };
 
-
 dotenv.config();
 
 import { authRouter } from "./routes/authRouter.js";
 import { waterRateRouter } from "./routes/waterRateRouter.js";
 import { waterRouter } from "./routes/waterRouter.js";
-import { userSettingsRouter } from "./routes/userSettingsRouter.js"
+import { userSettingsRouter } from "./routes/userSettingsRouter.js";
 
 export const app = express();
 
@@ -19,17 +18,11 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
-//  swagger
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));+
-
-
-app.use("/api/auth", authRouter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
++app.use("/api/auth", authRouter);
 app.use("/api/water-rate", waterRateRouter);
 app.use("/api/water", waterRouter);
 app.use("/api/user-settings", userSettingsRouter);
-
-
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });

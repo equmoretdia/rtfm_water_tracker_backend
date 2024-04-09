@@ -14,7 +14,7 @@ import { validateBody } from "../middlewares/validateBody.js";
 import {
   addWaterSchema,
   updateWaterSchema,
-  getWaterMonthSchema,
+  // getWaterMonthSchema,
 } from "../models/waterModel.js";
 
 export const waterRouter = express.Router();
@@ -37,6 +37,6 @@ waterRouter.get("/today", authenticate, getWaterToday);
 waterRouter.get(
   "/month",
   authenticate,
-  validateBody(getWaterMonthSchema),
+  // validateBody(getWaterMonthSchema),
   getWaterMonth
 );

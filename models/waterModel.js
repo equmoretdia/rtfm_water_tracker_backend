@@ -37,6 +37,6 @@ export const updateWaterSchema = Joi.object({
   date: Joi.date().iso(),
 });
 
-export const getWaterMonthSchema = Joi.object({
-  date: Joi.date().required().iso(),
-});
+// export const getWaterMonthSchema = Joi.object({
+//   date: Joi.date().required().iso(),
+// });
