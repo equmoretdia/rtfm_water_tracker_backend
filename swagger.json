@@ -10,9 +10,9 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "consumes": ["application/json", "multipart/form-data"],
-  "produces": ["application/json", "multipart/form-data"],
-  "servers": [{ "url": "http://localhost:8080" }],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "https://rtfm-water-tracker-backend.onrender.com/" }],
   "tags": [
     {
       "name": "Auth",
@@ -578,37 +578,38 @@
       },
 
      "UserUpdateInformation": {
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "User's name"
-    },
-    "email": {
-      "type": "string",
-      "description": "User's email",
-      "format": "email"
-    },
-    "gender": {
-      "type": "string",
-      "description": "User's gender"
-    },
-    "avatarURL": {
-      "type": "string",
-      "description": "URL to the user's avatar"
-    },
-    "userId": {
-      "type": "string",
-      "description": "User id"
-    }
-  },
-  "example": {
-    "name": "Kevin",
-    "email": "2@gmail.com",
-    "gender": "female",
-    "avatarURL": "http://example.com/avatar"
-  }
-},
+       "type": "object",
+       "properties": {
+         "name": {
+           "type": "string",
+           "description": "User's name"
+         },
+         "email": {
+           "type": "string",
+           "description": "User's email",
+           "format": "email"
+         },
+         "gender": {
+           "type": "string",
+           "description": "User's gender"
+         },
+         "avatarURL": {
+           "type": "string",
+           "description": "URL  avatar"
+         },
+         "userId": {
+           "type": "string",
+           "description": "User id"
+         }
+       },
+       "required": ["userId"],
+       "example": {
+         "name": "Kevin",
+         "email": "2@gmail.com",
+         "gender": "female",
+         "avatarURL": "http://example.com/avatar"
+       }
+     },
 
       "AddWaterRequest": {
         "type": "object",
