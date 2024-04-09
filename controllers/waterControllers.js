@@ -13,6 +13,7 @@ import {
 const add = async (req, res) => {
   const { _id: owner } = req.user;
   const newDose = await Water.create({ ...req.body, owner });
+
   res.status(201).json(newDose);
 };
 
