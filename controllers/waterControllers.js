@@ -81,6 +81,7 @@ const getToday = async (req, res) => {
   const waterPercent = Math.round((sumAmount / currentWaterRate) * 100);
 
   const waterRecords = waterAmount.map((record) => ({
+    id: record._id,
     consumedWater: record.amount,
     date: record.date,
   }));
