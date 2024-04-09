@@ -191,22 +191,27 @@
                 "name": {
                   "type": "string",
                   "description": "User's name",
-                  "format": "json"
+                  "format": "json",
+                  "example": "Marry"
                 },
                 "email": {
                   "type": "string",
                   "description": "User's email",
-                  "format": "json"
+                  "format": "json",
+                  "example": "user@example.com"
                 },
                 "gender": {
                   "type": "string",
                   "description": "User's gender",
-                  "format": "json"
+                  "format": "json",
+                  "example":"female"
+                  
                 },
                 "avatar": {
                   "type": "string",
                   "format": "binary",
                   "description": "File to upload as user avatar"
+                 
                 }
               }
             },
@@ -396,19 +401,20 @@
       "get": {
         "tags": ["Month"],
         "summary": "Information about monthly water norm",
-        " parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "",
+        " parameters": [
+        {
+          "name": "Date",
+          "in": "query",
+          "description": "Choose date to retrieve the daily water requirement",
           "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DateWaterRequest"
-              }
-            }
+          "schema": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-05-01T00:00:00Z"
           }
-        },
+        }
+      ],
+        "security": [{ "Bearer": [] }],
         "responses": {
           "201": {
             "description": "Successful",
@@ -427,6 +433,7 @@
         }
       }
     },
+
     "/api/water-rate/": {
       "patch": {
         "tags": ["WaterRate"],
@@ -595,14 +602,14 @@
             }
           }
         },
-        "example": [
+        "example": 
           {
             "name": "Kevin",
             "email": "2@gmail.com",
             "gender": "female",
             "avatarURL": "http://example.com/avatar"
           }
-        ]
+        
       },
 
      "UserUpdateInformation": {
@@ -634,7 +641,7 @@
        
        "example": {
          "name": "Kevin",
-         "email": "2@gmail.com",
+         "email": "user@example.com",
          "gender": "female",
          "avatarURL": "http://example.com/avatar"
        }
@@ -837,15 +844,7 @@
             "owner": "30459479hg345",
             "userId": "35465765843y43456"
           }]
-        },
-
-      "idUserRequest": {
-        "_id": {
-          "type": "string",
-          "description": "User's id",
-          "example": "660947c259f184ad0942f234"
         }
-      }
     },
     "securitySchemes": {
       "Bearer": {
