@@ -215,7 +215,7 @@
         }
       }
     },
-   
+
     "/api/water/": {
       "post": {
         "tags": ["Water"],
@@ -252,98 +252,100 @@
       }
     },
     "/api/water/{id}": {
-  "patch": {
-    "tags": ["Water"],
-    "summary": "Update water",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "description": "The unique identifier of the water record",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "security": [{ "Bearer": [] }],
-    "requestBody": {
-      "description": "Description for update water",
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/UpdateWater"
-          }
-        }
-      }
-    },
-    "responses": {
-      "201": {
-        "description": "Successful",
-        "content": {
-          "application/json": {
+      "patch": {
+        "tags": ["Water"],
+        "summary": "Update water",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of the water record",
+            "required": true,
             "schema": {
-              "$ref": "#/components/schemas/UpdateWater"
+              "type": "string"
             }
           }
-        }
-      },
-      "404": {
-        "description": "Not Found"
-      }
-    }
-  },
-  "delete": {
-    "tags": ["Water"],
-    "summary": "Delete information about water",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "description": "The unique identifier of the water record",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "security": [{ "Bearer": [] }],
-    "responses": {
-      "200": {
-        "description": "Successful deletion",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/DeleteWaterResponse"
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found"
-      }
-    }
-  }
-},
-
-    "/api/water/today": {
-      "get": {
-        "tags": ["Today"],
-        "summary": "Information about daily water requirement",
-        " parameters": [],
+        ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "Description for update water",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DateWaterRequest"
+                "$ref": "#/components/schemas/UpdateWater"
               }
             }
           }
         },
+        "responses": {
+          "201": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateWater"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Water"],
+        "summary": "Delete information about water",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique identifier of the water record",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful deletion",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteWaterResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    
+    "/api/water/today": {
+      "get": {
+        "tags": ["Today"],
+        "summary": "Information about daily water requirement",
+        " parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Choose date to retrieve the daily water requirement",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-05-01T00:00:00Z"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        
         "responses": {
           "201": {
             "description": "",
