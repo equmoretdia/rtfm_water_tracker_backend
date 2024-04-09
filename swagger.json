@@ -10,8 +10,8 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "consumes": ["application/json","multipart/form-data"],
+  "produces": ["application/json", "multipart/form-data"],
   "servers": [{ "url": "https://rtfm-water-tracker-backend.onrender.com/" }],
   "tags": [
     {
@@ -168,15 +168,59 @@
         }
       }
     },
-    "/api/user-settings/edit": {
-      "patch": {
-        "tags": ["User"],
-        "summary": "Update information",
-        " parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "",
-          "required": true,
+
+
+    
+  "/api/user-settings/edit": {
+    "patch": {
+      "tags": ["User"],
+      "summary": "Update user information including avatar",
+      "security": [
+        {
+          "Bearer": []
+        }
+      ],
+      "requestBody": {
+        "description": "User information and avatar to update",
+        
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "User's name",
+                  "format": "json"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "User's email",
+                  "format": "json"
+                },
+                "gender": {
+                  "type": "string",
+                  "description": "User's gender",
+                  "format": "json"
+                },
+                "avatar": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "File to upload as user avatar"
+                }
+              }
+            },
+            "encoding": {
+              "avatar": {
+                "contentType": "image/jpeg, image/png"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "User information updated successfully",
           "content": {
             "application/json": {
               "schema": {
@@ -185,37 +229,21 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserUpdateInformation"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Email is already in use",
-            "content": {}
-          },
-          "400": {
-            "description": "To change the password, provide both outdatedPassword and newPassword",
-            "content": {}
-          },
-          "404": {
-            "description": "User not found",
-            "content": {}
-          },
-          "401": {
-            "description": "Current password is incorrect",
-            "content": {}
-          }
+        "400": {
+          "description": "To change the password, provide both outdatedPassword and newPassword"
+        },
+        "401": {
+          "description": "Current password is incorrect"
+        },
+        "404": {
+          "description": "User not found"
+        },
+        "409": {
+          "description": "Email is already in use"
         }
       }
-    },
-
+    }
+  },
     "/api/water/": {
       "post": {
         "tags": ["Water"],
@@ -595,6 +623,7 @@
          },
          "avatarURL": {
            "type": "string",
+           "format": "binary",
            "description": "URL  avatar"
          },
          "userId": {
@@ -602,7 +631,7 @@
            "description": "User id"
          }
        },
-       "required": ["userId"],
+       
        "example": {
          "name": "Kevin",
          "email": "2@gmail.com",
