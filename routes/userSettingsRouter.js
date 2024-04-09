@@ -5,7 +5,6 @@ import {
   updateUserSettings,
 } from "../controllers/userSettingsControllers.js";
 import { authenticate } from "../middlewares/authenticate.js";
-import { isBodyEmpty } from "../middlewares/isBodyEmpty.js";
 import { upload } from "../middlewares/upload.js";
 import { validateBody } from "../middlewares/validateBody.js";
 import { userInfoUpdatedSchema } from "../models/usersModel.js";
@@ -18,7 +17,6 @@ userSettingsRouter.patch(
   "/edit",
   authenticate,
   upload.single("avatar"),
-  isBodyEmpty,
   validateBody(userInfoUpdatedSchema),
   updateUserSettings
 );

@@ -17,6 +17,11 @@ const updateSettings = async (req, res) => {
 
   if (req.file) {
     avatarURL = req.file.path;
+  } else {
+    const keys = Object.keys(req.body);
+    if (!keys.length) {
+      throw HttpError(400, "Body must have at least one field");
+    }
   }
 
   if (outdatedPassword && newPassword) {
