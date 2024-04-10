@@ -10,7 +10,7 @@ const get = async (req, res) => {
 
 const updateSettings = async (req, res) => {
   const { outdatedPassword, newPassword, newEmail } = req.body;
-  const { _id, currentEmail } = req.user;
+  const { _id, currentEmail, password } = req.user;
 
   let hashedNewPassword;
   let avatarURL;
@@ -25,13 +25,6 @@ const updateSettings = async (req, res) => {
   }
 
   if (outdatedPassword && newPassword) {
-    const user = await User.findById(_id);
-    if (!user) {
-      throw HttpError(404, "User not found");
-    }
-
-    const { password } = user;
-
     if (outdatedPassword === newPassword) {
       throw HttpError(
         400,
