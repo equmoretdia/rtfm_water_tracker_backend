@@ -93,7 +93,6 @@ const getToday = async (req, res) => {
 
 const getMonth = async (req, res) => {
   const { _id: owner } = req.user;
-  // const { date } = req.body;
   const { date } = req.query;
 
   const requestDate = parseDate(date);
