@@ -401,18 +401,18 @@
       "get": {
         "tags": ["Month"],
         "summary": "Information about monthly water norm",
-        " parameters": [
-        {
-          "name": "Date",
-          "in": "query",
-          "description": "Choose date to retrieve the daily water requirement",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-05-01T00:00:00Z"
-          }
+        "parameters": [
+          {
+        "name": "date",
+        "in": "query",
+        "description": "Choose date to retrieve the monthly water requirement",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2024-05-01T00:00:00Z"
         }
+      }
       ],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -600,6 +600,7 @@
               "type": "string",
               "description": "URL to the user's avatar"
             }
+            
           }
         },
         "example": 
@@ -608,6 +609,7 @@
             "email": "2@gmail.com",
             "gender": "female",
             "avatarURL": "http://example.com/avatar"
+            
           }
         
       },
