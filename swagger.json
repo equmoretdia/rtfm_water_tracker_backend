@@ -364,7 +364,7 @@
       "get": {
         "tags": ["Today"],
         "summary": "Information about daily water requirement",
-        " parameters": [
+        "parameters": [
           {
             "name": "date",
             "in": "query",
@@ -438,7 +438,7 @@
       "patch": {
         "tags": ["WaterRate"],
         "summary": "Calculation of daily rate water ",
-        " parameters": [],
+        "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "",
