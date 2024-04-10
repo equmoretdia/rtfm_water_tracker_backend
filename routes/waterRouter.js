@@ -11,11 +11,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 import { isValidId } from "../middlewares/isValidId.js";
 import { isBodyEmpty } from "../middlewares/isBodyEmpty.js";
 import { validateBody } from "../middlewares/validateBody.js";
-import {
-  addWaterSchema,
-  updateWaterSchema,
-  // getWaterMonthSchema,
-} from "../models/waterModel.js";
+import { addWaterSchema, updateWaterSchema } from "../models/waterModel.js";
 
 export const waterRouter = express.Router();
 
@@ -34,9 +30,4 @@ waterRouter.delete("/:id", authenticate, isValidId, deleteWater);
 
 waterRouter.get("/today", authenticate, getWaterToday);
 
-waterRouter.get(
-  "/month",
-  authenticate,
-  // validateBody(getWaterMonthSchema),
-  getWaterMonth
-);
+waterRouter.get("/month", authenticate, getWaterMonth);

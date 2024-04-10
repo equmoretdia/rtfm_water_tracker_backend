@@ -20,9 +20,14 @@ const add = async (req, res) => {
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const updatedDose = await Water.findByIdAndUpdate(id, req.body, {
-    new: true,
-  });
+  const { _id: owner } = req.user;
+  const updatedDose = await Water.findOneAndUpdate(
+    { _id: id, owner },
+    req.body,
+    {
+      new: true,
+    }
+  );
 
   if (!updatedDose) {
     throw HttpError(404);
@@ -33,7 +38,8 @@ const update = async (req, res) => {
 
 const del = async (req, res) => {
   const { id } = req.params;
-  const removedDose = await Water.findByIdAndDelete(id);
+  const { _id: owner } = req.user;
+  const removedDose = await Water.findOneAndDelete({ _id: id, owner });
   if (!removedDose) {
     throw HttpError(404);
   }
@@ -93,7 +99,6 @@ const getToday = async (req, res) => {
 
 const getMonth = async (req, res) => {
   const { _id: owner } = req.user;
-  // const { date } = req.body;
   const { date } = req.query;
 
   const requestDate = parseDate(date);
