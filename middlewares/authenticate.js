@@ -10,9 +10,9 @@ export const authenticate = async (req, res, next) => {
     next(HttpError(401));
   }
   try {
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const { id } = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
     const user = await User.findById(id);
-    if (!user || !user.token || user.token !== token) {
+    if (!user || !user.accessToken || user.accessToken !== token) {
       next(HttpError(401));
     }
     req.user = user;
