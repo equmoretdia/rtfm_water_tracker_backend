@@ -59,6 +59,10 @@ export const authSchema = Joi.object({
   password: Joi.string().min(8).max(64).required(),
 });
 
+export const refreshSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+});
+
 export const userInfoUpdatedSchema = Joi.object({
   name: Joi.string().max(32),
   email: Joi.string().pattern(emailRegexp).messages({
