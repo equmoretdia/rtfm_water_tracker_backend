@@ -29,7 +29,11 @@ const userSchema = new Schema(
       enum: ["male", "female"],
       default: "female",
     },
-    token: {
+    accessToken: {
+      type: String,
+      default: null,
+    },
+    refreshToken: {
       type: String,
       default: null,
     },
@@ -53,6 +57,10 @@ export const authSchema = Joi.object({
     "string.pattern.base": "Email must be in the format 'example@example.com'.",
   }),
   password: Joi.string().min(8).max(64).required(),
+});
+
+export const refreshSchema = Joi.object({
+  refreshToken: Joi.string().required(),
 });
 
 export const userInfoUpdatedSchema = Joi.object({

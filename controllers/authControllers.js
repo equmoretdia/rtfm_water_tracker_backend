@@ -34,26 +34,57 @@ const login = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const token = jwt.sign(
-    {
-      id: user._id,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "12h" }
-  );
-  await User.findByIdAndUpdate(user._id, { token });
+  const payload = {
+    id: user._id,
+  };
+  const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET_KEY, {
+    expiresIn: "2m",
+  });
+  const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET_KEY, {
+    expiresIn: "7D",
+  });
+
+  await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
+
   res.json({
-    token,
+    accessToken,
+    refreshToken,
     user: { email: user.email, avatarURL: user.avatarURL },
+  });
+};
+
+const refresh = async (req, res) => {
+  const { refreshToken: token } = req.body;
+
+  const { id } = jwt.verify(token, process.env.REFRESH_SECRET_KEY);
+
+  const isExist = await User.findOne({ refreshToken: token });
+  if (!isExist) {
+    throw HttpError(403, "Invalid token");
+  }
+
+  const accessToken = jwt.sign({ id }, process.env.ACCESS_SECRET_KEY, {
+    expiresIn: "2m",
+  });
+  const refreshToken = jwt.sign({ id }, process.env.REFRESH_SECRET_KEY, {
+    expiresIn: "7D",
+  });
+
+  await User.findByIdAndUpdate(id, { accessToken, refreshToken });
+
+  res.json({
+    accessToken,
+    refreshToken,
   });
 };
 
 const logout = async (req, res) => {
   const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: null });
+  await User.findByIdAndUpdate(_id, { accessToken: null, refreshToken: null });
   res.status(204).end();
 };
 
 export const registerUser = ctrlWrapper(register);
 export const loginUser = ctrlWrapper(login);
+export const refreshUser = ctrlWrapper(refresh);
 export const logoutUser = ctrlWrapper(logout);
