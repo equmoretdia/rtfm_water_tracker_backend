@@ -34,16 +34,20 @@ const login = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const token = jwt.sign(
-    {
-      id: user._id,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "12h" }
-  );
-  await User.findByIdAndUpdate(user._id, { token });
+  const payload = {
+    id: user._id,
+  };
+
+  const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET_KEY, {
+    expiresIn: "2m",
+  });
+  const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET_KEY, {
+    expiresIn: "7D",
+  });
+  await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
   res.json({
-    token,
+    accessToken,
+    refreshToken,
     user: { email: user.email, avatarURL: user.avatarURL },
   });
 };

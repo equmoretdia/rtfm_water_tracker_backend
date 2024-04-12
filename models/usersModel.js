@@ -29,7 +29,11 @@ const userSchema = new Schema(
       enum: ["male", "female"],
       default: "female",
     },
-    token: {
+    accessToken: {
+      type: String,
+      default: null,
+    },
+    refreshToken: {
       type: String,
       default: null,
     },
